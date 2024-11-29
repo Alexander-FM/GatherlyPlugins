@@ -7,18 +7,27 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "Customer")
-public class Customer implements Serializable {
+@Table(name = "employee")
+public class Employee implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+  @Column(name = "id")
+  private Long id;
+
+  @Column(name = "username", nullable = false, length = 50, unique = true)
+  private String username;
+
+  @Column(name = "password", nullable = false, length = 100)
+  private String password;
 
   @Column(name="name", nullable = false)
   private String name;
@@ -32,7 +41,10 @@ public class Customer implements Serializable {
   @Column(name = "email", nullable = false, length = 50, unique = true)
   private String email;
 
-  @Column(name="address", nullable = false)
-  private String address;
+  @Column(name = "creation_date", nullable = false)
+  private LocalDateTime creationDate;
+
+  @Column(name = "role", nullable = false)
+  private String role;
 
 }

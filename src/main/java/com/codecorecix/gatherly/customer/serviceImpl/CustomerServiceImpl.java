@@ -1,8 +1,9 @@
-package com.codecorecix.gatherly.customer.service;
+package com.codecorecix.gatherly.customer.serviceImpl;
 
 import com.codecorecix.gatherly.customer.mapper.CustomerFieldsMapper;
 import com.codecorecix.gatherly.customer.repository.CustomerRepository;
 
+import com.codecorecix.gatherly.customer.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,4 +14,8 @@ public class CustomerServiceImpl implements CustomerService {
   private final CustomerRepository customerRepository;
 
   private final CustomerFieldsMapper customerFieldsMapper;
+
+
+
+
 }
