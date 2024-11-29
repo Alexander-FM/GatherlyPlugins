@@ -7,6 +7,218 @@
 	},
 	"item": [
 		{
+			"name": "EMPLOYEE",
+			"item": [
+				{
+					"name": "Registro Employee",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"prueba\",\r\n  \"name\": \"John\",\r\n  \"lastname\": \"Doe\",\r\n  \"email\": \"john.doe@example.com\",\r\n  \"password\": \"123456\",\r\n  \"phone\": \"123456789\",\r\n  \"role\": \"Admin\",\r\n  \"dateCessation\": null\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9090/api/employee/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"employee",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Employee",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9090/api/employee",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"employee"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Employee",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"prueba\",\r\n  \"name\": \"John\",\r\n  \"lastname\": \"Doe\",\r\n  \"email\": \"john.doe@example.com\",\r\n  \"password\": \"123456\",\r\n  \"phone\": \"123456789\",\r\n  \"role\": \"Admin\",\r\n  \"dateCessation\": null\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9090/api/employee/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"employee",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Employee",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9090/api/employee/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"employee",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CUSTOMER",
+			"item": [
+				{
+					"name": "Registro Customer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Juan\",\r\n  \"lastname\": \"Pérez\",\r\n  \"phone\": \"987654321\",\r\n  \"email\": \"juan.perez@example.com\",\r\n  \"address\": \"Av. Principal 123, Lima\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9090/api/customer/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"customer",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Customer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9090/api/customer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"customer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Customer",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Jane\",\r\n  \"lastname\": \"Smith\",\r\n  \"phone\": \"987654321\",\r\n  \"email\": \"jane.smith@example.com\",\r\n  \"address\": \"456 Elm Street\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9090/api/customer/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"customer",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Customer",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9090/api/customer/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"customer",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Login",
 			"request": {
 				"method": "POST",
@@ -37,13 +249,13 @@
 			"response": []
 		},
 		{
-			"name": "Registro Employee",
+			"name": "Registro Supplier",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"username\": \"prueba\",\r\n  \"name\": \"John\",\r\n  \"lastname\": \"Doe\",\r\n  \"email\": \"john.doe@example.com\",\r\n  \"password\": \"123456\",\r\n  \"phone\": \"123456789\",\r\n  \"role\": \"Admin\",\r\n  \"dateCessation\": null\r\n}\r\n",
+					"raw": "{\r\n  \"name\": \"Proveedor ABC\",\r\n  \"serviceType\": \"Catering\",\r\n  \"availability\": true,\r\n  \"servicePrice\": 500.0,\r\n  \"rating\": \"5 estrellas\"\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -51,7 +263,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:9090/api/employee/register",
+					"raw": "http://localhost:9090/api/suppliers",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -59,21 +271,20 @@
 					"port": "9090",
 					"path": [
 						"api",
-						"employee",
-						"register"
+						"suppliers"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Registro Customer",
+			"name": "Registro Quoatation",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"Juan\",\r\n  \"lastname\": \"Pérez\",\r\n  \"phone\": \"987654321\",\r\n  \"email\": \"juan.perez@example.com\",\r\n  \"address\": \"Av. Principal 123, Lima\"\r\n}\r\n",
+					"raw": "{\r\n  \"issueDate\": \"2024-11-29\",\r\n  \"totalCost\": 1000.0\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -81,7 +292,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:9090/api/customer/register",
+					"raw": "http://localhost:9090/api/quotations",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -89,8 +300,36 @@
 					"port": "9090",
 					"path": [
 						"api",
-						"customer",
-						"register"
+						"quotations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Registro Services",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"serviceName\": \"Decoración de Eventos\",\r\n  \"cost\": 1000.0,\r\n  \"description\": \"Decoración completa para bodas y eventos corporativos\",\r\n  \"availability\": true,\r\n  \"supplierId\": 1,\r\n  \"quotationId\": 1\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9090/api/services",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"api",
+						"services"
 					]
 				}
 			},

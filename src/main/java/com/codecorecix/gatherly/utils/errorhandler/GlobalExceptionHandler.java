@@ -27,6 +27,7 @@ public class GlobalExceptionHandler {
     HttpStatus status = switch (errorMessage) {
       case ERROR_INTERNAL -> HttpStatus.BAD_REQUEST;
       case ERROR_REGISTER -> HttpStatus.NOT_FOUND;
+      case CUSTOMER_NOT_FOUND -> HttpStatus.NOT_FOUND;
       case ERROR_LOGIN -> HttpStatus.UNAUTHORIZED;
     };
     return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), errorMessage.getErrorMessage()), status);

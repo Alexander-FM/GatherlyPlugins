@@ -9,7 +9,8 @@ public enum GatherlyErrorMessage {
 
   ERROR_INTERNAL(100, "An error occurred on the server"),
   ERROR_REGISTER(101, "The client already exists"),
-  ERROR_LOGIN(102, "The email or password is incorrect");
+  ERROR_LOGIN(102, "The email or password is incorrect"),
+  CUSTOMER_NOT_FOUND(103, "The customer does not exist"); // Nuevo mensaje
 
   private final Integer errorCode;
 

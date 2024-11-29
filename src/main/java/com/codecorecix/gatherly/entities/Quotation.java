@@ -26,7 +26,7 @@ public class Quotation implements Serializable {
   private Event event;
 
   @OneToMany(mappedBy = "quotation", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Service> includedServices;
+  private List<Services> includedServices;
 
   @Column(name = "total_cost", nullable = false)
   private Double totalCost;
@@ -36,7 +36,7 @@ public class Quotation implements Serializable {
 
   public void calculateTotalCost() {
     this.totalCost = includedServices.stream()
-      .mapToDouble(Service::getCost)
+      .mapToDouble(Services::getCost)
       .sum();
   }
 }

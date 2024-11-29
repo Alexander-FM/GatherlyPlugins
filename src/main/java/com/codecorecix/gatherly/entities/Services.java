@@ -14,7 +14,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Entity
 @Table(name = "service")
-public class Service implements Serializable {
+public class Services implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

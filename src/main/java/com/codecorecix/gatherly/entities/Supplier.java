@@ -37,6 +37,6 @@ public class Supplier implements Serializable {
   private String rating;
 
   @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Service> services;
+  private List<Services> services;
 }
 

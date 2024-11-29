@@ -15,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -53,4 +55,33 @@ public class EmployeeServiceImpl implements EmployeeService {
     return employeeFieldsMapper.destinationToSource(employee);
   }
 
+  @Override
+  public List<EmployeeResponseDto> getAllEmployees() {
+    return employeeRepository.findAll().stream()
+      .map(employeeFieldsMapper::destinationToSource)
+      .collect(Collectors.toList());
+  }
+
+  @Override
+  public EmployeeResponseDto updateEmployee(Integer id, EmployeeRequestDto employeeRequestDto) {
+    Employee employee = employeeRepository.findById(id)
+      .orElseThrow(() -> new GatherlyExceptions(GatherlyErrorMessage.ERROR_INTERNAL));
+
+    employee.setUsername(employeeRequestDto.getUsername());
+    employee.setName(employeeRequestDto.getName());
+    employee.setLastname(employeeRequestDto.getLastname());
+    employee.setEmail(employeeRequestDto.getEmail());
+    employee.setPhone(employeeRequestDto.getPhone());
+    employee.setRole(employeeRequestDto.getRole());
+
+    Employee updatedEmployee = employeeRepository.save(employee);
+    return employeeFieldsMapper.destinationToSource(updatedEmployee);
+  }
+
+  @Override
+  public void deleteEmployee(Integer id) {
+    Employee employee = employeeRepository.findById(id)
+      .orElseThrow(() -> new GatherlyExceptions(GatherlyErrorMessage.ERROR_INTERNAL));
+    employeeRepository.delete(employee);
+  }
 }
