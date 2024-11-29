@@ -1,7 +1,7 @@
 package com.codecorecix.gatherly.employee.serviceImpl;
 
-import com.codecorecix.gatherly.employee.dto.request.employee.EmployeeRequestDto;
-import com.codecorecix.gatherly.employee.dto.response.employee.EmployeeResponseDto;
+import com.codecorecix.gatherly.employee.api.dto.request.employee.EmployeeRequestDto;
+import com.codecorecix.gatherly.employee.api.dto.response.employee.EmployeeResponseDto;
 import com.codecorecix.gatherly.employee.mapper.EmployeeFieldsMapper;
 import com.codecorecix.gatherly.employee.repository.EmployeeRepository;
 import com.codecorecix.gatherly.employee.service.EmployeeService;
@@ -44,7 +44,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   @Override
   public EmployeeResponseDto login(String email, String password) {
     Employee employee = employeeRepository.findByEmail(email)
-      .orElseThrow(() -> new EntityNotFoundException("Empleado no encontrado con el email: " + email));
+      .orElseThrow(() -> new EntityNotFoundException("Employee not found with email: " + email));
 
     if (!passwordEncoder.matches(password, employee.getPassword())) {
       throw new GatherlyExceptions(GatherlyErrorMessage.ERROR_LOGIN);

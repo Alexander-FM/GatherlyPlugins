@@ -14,6 +14,4 @@ public interface CustomerFieldsMapper {
   Customer sourceToDestination(final CustomerRequestDto customerRequestDto);
 
   CustomerResponseDto destinationToSource(final Customer customer);
-
-  List<CustomerResponseDto> sourceToDestination(final List<Customer> customers);
 }

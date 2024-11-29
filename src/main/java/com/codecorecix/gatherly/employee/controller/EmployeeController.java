@@ -1,8 +1,8 @@
 package com.codecorecix.gatherly.employee.controller;
 
-import com.codecorecix.gatherly.employee.dto.request.employee.EmployeeLoginRequestDto;
-import com.codecorecix.gatherly.employee.dto.request.employee.EmployeeRequestDto;
-import com.codecorecix.gatherly.employee.dto.response.employee.EmployeeResponseDto;
+import com.codecorecix.gatherly.employee.api.dto.request.employee.EmployeeLoginRequestDto;
+import com.codecorecix.gatherly.employee.api.dto.request.employee.EmployeeRequestDto;
+import com.codecorecix.gatherly.employee.api.dto.response.employee.EmployeeResponseDto;
 import com.codecorecix.gatherly.employee.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

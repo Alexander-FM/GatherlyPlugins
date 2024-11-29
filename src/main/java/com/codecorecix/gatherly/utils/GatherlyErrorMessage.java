@@ -7,9 +7,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum GatherlyErrorMessage {
 
-  ERROR_INTERNAL(100, "Ocurrió un error en el servidor"),
-  ERROR_REGISTER(101, "El usuario ya existe"),
-  ERROR_LOGIN(102, "El email o contraseña son incorrectas");
+  ERROR_INTERNAL(100, "An error occurred on the server"),
+  ERROR_REGISTER(101, "The client already exists"),
+  ERROR_LOGIN(102, "The email or password is incorrect");
 
   private final Integer errorCode;
 

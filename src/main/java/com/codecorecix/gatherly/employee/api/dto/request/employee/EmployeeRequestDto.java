@@ -1,4 +1,4 @@
-package com.codecorecix.gatherly.employee.dto.request.employee;
+package com.codecorecix.gatherly.employee.api.dto.request.employee;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

@@ -1,4 +1,4 @@
-package com.codecorecix.gatherly.employee.dto.response.employee;
+package com.codecorecix.gatherly.employee.api.dto.response.employee;
 
 import lombok.Data;
 
