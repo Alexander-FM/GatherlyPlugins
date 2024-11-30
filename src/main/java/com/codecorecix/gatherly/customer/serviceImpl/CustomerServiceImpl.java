@@ -4,11 +4,13 @@ import com.codecorecix.gatherly.customer.api.dto.request.customer.CustomerReques
 import com.codecorecix.gatherly.customer.api.dto.response.customer.CustomerResponseDto;
 import com.codecorecix.gatherly.customer.mapper.CustomerFieldsMapper;
 import com.codecorecix.gatherly.customer.repository.CustomerRepository;
-
 import com.codecorecix.gatherly.customer.service.CustomerService;
 import com.codecorecix.gatherly.entities.Customer;
 import com.codecorecix.gatherly.exceptions.GatherlyExceptions;
+import com.codecorecix.gatherly.management.utils.GenericResponse;
+import com.codecorecix.gatherly.management.utils.GenericResponseConstants;
 import com.codecorecix.gatherly.utils.GatherlyErrorMessage;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,37 +22,33 @@ import java.util.stream.Collectors;
 public class CustomerServiceImpl implements CustomerService {
 
   private final CustomerRepository customerRepository;
-
   private final CustomerFieldsMapper customerFieldsMapper;
 
   @Override
-  public CustomerResponseDto registerCustomer(CustomerRequestDto customerRequestDto) {
-    // Verificar si el email ya existe
+  public GenericResponse<CustomerResponseDto> registerCustomer(CustomerRequestDto customerRequestDto) {
     if (customerRepository.existsByEmail(customerRequestDto.getEmail())) {
-      throw new GatherlyExceptions(GatherlyErrorMessage.ERROR_REGISTER);
+      throw new GatherlyExceptions(GatherlyErrorMessage.CUSTOMER_ALREADY_EXISTS);
     }
 
-    // Convertir el DTO a la entidad
     Customer customer = customerFieldsMapper.sourceToDestination(customerRequestDto);
-
-    // Guardar el cliente en la base de datos
     Customer savedCustomer = customerRepository.save(customer);
+    CustomerResponseDto response = customerFieldsMapper.destinationToSource(savedCustomer);
 
-    // Convertir la entidad guardada a DTO de respuesta
-    return customerFieldsMapper.destinationToSource(savedCustomer);
+    return new GenericResponse<>(GenericResponseConstants.SUCCESS, GenericResponseConstants.OPERATION_SUCCESS, response);
   }
 
   @Override
-  public List<CustomerResponseDto> getAllCustomers() {
-    return customerRepository.findAll().stream()
+  public GenericResponse<List<CustomerResponseDto>> getAllCustomers() {
+    List<CustomerResponseDto> customers = customerRepository.findAll().stream()
       .map(customerFieldsMapper::destinationToSource)
       .collect(Collectors.toList());
+    return new GenericResponse<>(GenericResponseConstants.SUCCESS, GenericResponseConstants.OPERATION_SUCCESS, customers);
   }
 
   @Override
-  public CustomerResponseDto updateCustomer(Integer id, CustomerRequestDto customerRequestDto) {
+  public GenericResponse<CustomerResponseDto> updateCustomer(Integer id, CustomerRequestDto customerRequestDto) {
     Customer customer = customerRepository.findById(id)
-      .orElseThrow(() -> new GatherlyExceptions(GatherlyErrorMessage.ERROR_INTERNAL));
+      .orElseThrow(() -> new GatherlyExceptions(GatherlyErrorMessage.CUSTOMER_NOT_FOUND));
 
     customer.setName(customerRequestDto.getName());
     customer.setLastname(customerRequestDto.getLastname());
@@ -59,13 +57,17 @@ public class CustomerServiceImpl implements CustomerService {
     customer.setAddress(customerRequestDto.getAddress());
 
     Customer updatedCustomer = customerRepository.save(customer);
-    return customerFieldsMapper.destinationToSource(updatedCustomer);
+    CustomerResponseDto response = customerFieldsMapper.destinationToSource(updatedCustomer);
+
+    return new GenericResponse<>(GenericResponseConstants.SUCCESS, GenericResponseConstants.OPERATION_SUCCESS, response);
   }
 
   @Override
-  public void deleteCustomer(Integer id) {
+  public GenericResponse<Void> deleteCustomer(Integer id) {
     Customer customer = customerRepository.findById(id)
-      .orElseThrow(() -> new GatherlyExceptions(GatherlyErrorMessage.ERROR_INTERNAL));
+      .orElseThrow(() -> new GatherlyExceptions(GatherlyErrorMessage.CUSTOMER_NOT_FOUND));
+
     customerRepository.delete(customer);
+    return new GenericResponse<>(GenericResponseConstants.SUCCESS, GenericResponseConstants.OPERATION_SUCCESS, null);
   }
 }

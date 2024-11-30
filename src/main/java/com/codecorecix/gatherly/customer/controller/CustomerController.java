@@ -4,6 +4,7 @@ import com.codecorecix.gatherly.customer.api.dto.request.customer.CustomerReques
 import com.codecorecix.gatherly.customer.api.dto.response.customer.CustomerResponseDto;
 import com.codecorecix.gatherly.customer.service.CustomerService;
 
+import com.codecorecix.gatherly.management.utils.GenericResponse;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,30 +21,24 @@ public class CustomerController {
   private final CustomerService customerService;
 
   @PostMapping("/register")
-  public ResponseEntity<CustomerResponseDto> registerCustomer(@RequestBody CustomerRequestDto customerRequestDto) {
-    // Llamada al servicio para registrar el cliente
-    CustomerResponseDto response = customerService.registerCustomer(customerRequestDto);
-    return new ResponseEntity<>(response, HttpStatus.CREATED);
+  public GenericResponse<CustomerResponseDto> registerCustomer(@RequestBody CustomerRequestDto customerRequestDto) {
+    return customerService.registerCustomer(customerRequestDto);
   }
 
   @GetMapping
-  public ResponseEntity<List<CustomerResponseDto>> getAllCustomers() {
-    List<CustomerResponseDto> customers = customerService.getAllCustomers();
-    return new ResponseEntity<>(customers, HttpStatus.OK);
+  public GenericResponse<List<CustomerResponseDto>> getAllCustomers() {
+    return customerService.getAllCustomers();
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<CustomerResponseDto> updateCustomer(
-    @PathVariable Integer id,
-    @RequestBody CustomerRequestDto customerRequestDto) {
-    CustomerResponseDto updatedCustomer = customerService.updateCustomer(id, customerRequestDto);
-    return new ResponseEntity<>(updatedCustomer, HttpStatus.OK);
+  public GenericResponse<CustomerResponseDto> updateCustomer(@PathVariable Integer id,
+                                                             @RequestBody CustomerRequestDto customerRequestDto) {
+    return customerService.updateCustomer(id, customerRequestDto);
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> deleteCustomer(@PathVariable Integer id) {
-    customerService.deleteCustomer(id);
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  public GenericResponse<Void> deleteCustomer(@PathVariable Integer id) {
+    return customerService.deleteCustomer(id);
   }
 }
 

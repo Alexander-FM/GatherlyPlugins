@@ -38,5 +38,8 @@ public class Supplier implements Serializable {
 
   @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Services> services;
+
+  @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Event> events;
 }
 

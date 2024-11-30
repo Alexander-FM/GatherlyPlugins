@@ -36,9 +36,6 @@ public class Services implements Serializable {
   @JoinColumn(name = "supplier_id", nullable = false)
   private Supplier supplier;
 
-  @ManyToOne
-  @JoinColumn(name = "quotation_id", nullable = false)
-  private Quotation quotation;
 }
 
 

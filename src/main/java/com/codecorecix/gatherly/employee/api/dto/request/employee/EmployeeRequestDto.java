@@ -10,25 +10,26 @@ import java.io.Serializable;
 public class EmployeeRequestDto implements Serializable {
   private Integer id;
 
-  @NotBlank(message = "El nombre de usuario es obligatorio")
+  @NotBlank(message = "Username cannot be blank")
   private String username;
 
-  @NotBlank(message = "La contraseña es obligatoria")
+  @NotBlank(message = "Password cannot be blank")
   private String password;
 
-  @NotBlank(message = "El nombre es obligatorio")
+  @NotBlank(message = "Name cannot be blank")
   private String name;
 
-  @NotBlank(message = "El apellido es obligatorio")
+  @NotBlank(message = "Lastname cannot be blank")
   private String lastname;
 
-  @Email(message = "El correo debe ser válido")
+  @Email(message = "Invalid email format")
+  @NotBlank(message = "Email cannot be blank")
   private String email;
 
-  @NotBlank(message = "El número de teléfono es obligatorio")
+  @NotBlank(message = "Phone number is required")
   private String phone;
 
-  @NotBlank(message = "El rol es obligatorio")
+  @NotBlank(message = "Role cannot be blank")
   private String role;
 
   private String creationDate;

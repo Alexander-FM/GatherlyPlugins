@@ -7,7 +7,10 @@ import com.codecorecix.gatherly.employee.repository.EmployeeRepository;
 import com.codecorecix.gatherly.employee.service.EmployeeService;
 import com.codecorecix.gatherly.entities.Employee;
 import com.codecorecix.gatherly.exceptions.GatherlyExceptions;
+import com.codecorecix.gatherly.management.utils.GenericResponse;
+import com.codecorecix.gatherly.management.utils.GenericResponseConstants;
 import com.codecorecix.gatherly.utils.GatherlyErrorMessage;
+
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,16 +26,15 @@ import java.util.stream.Collectors;
 public class EmployeeServiceImpl implements EmployeeService {
 
   private final EmployeeRepository employeeRepository;
-
   private final EmployeeFieldsMapper employeeFieldsMapper;
 
   @Autowired
   private PasswordEncoder passwordEncoder;
 
   @Override
-  public EmployeeResponseDto register(EmployeeRequestDto employeeRequestDto) {
+  public GenericResponse<EmployeeResponseDto> register(EmployeeRequestDto employeeRequestDto) {
     if (employeeRepository.findByEmail(employeeRequestDto.getEmail()).isPresent()) {
-      throw new GatherlyExceptions(GatherlyErrorMessage.ERROR_REGISTER);
+      throw new GatherlyExceptions(GatherlyErrorMessage.EMPLOYEE_ALREADY_EXISTS);
     }
 
     Employee employee = employeeFieldsMapper.sourceToDestination(employeeRequestDto);
@@ -40,32 +42,36 @@ public class EmployeeServiceImpl implements EmployeeService {
     employee.setCreationDate(LocalDateTime.now());
     Employee savedEmployee = employeeRepository.save(employee);
 
-    return employeeFieldsMapper.destinationToSource(savedEmployee);
+    EmployeeResponseDto response = employeeFieldsMapper.destinationToSource(savedEmployee);
+    return new GenericResponse<>(GenericResponseConstants.SUCCESS, GenericResponseConstants.OPERATION_SUCCESS, response);
   }
 
   @Override
-  public EmployeeResponseDto login(String email, String password) {
+  public GenericResponse<EmployeeResponseDto> login(String email, String password) {
     Employee employee = employeeRepository.findByEmail(email)
-      .orElseThrow(() -> new EntityNotFoundException("Employee not found with email: " + email));
+      .orElseThrow(() -> new GatherlyExceptions(GatherlyErrorMessage.EMPLOYEE_NOT_FOUND));
 
     if (!passwordEncoder.matches(password, employee.getPassword())) {
-      throw new GatherlyExceptions(GatherlyErrorMessage.ERROR_LOGIN);
+      throw new GatherlyExceptions(GatherlyErrorMessage.EMPLOYEE_INVALID_LOGIN);
     }
 
-    return employeeFieldsMapper.destinationToSource(employee);
+    EmployeeResponseDto response = employeeFieldsMapper.destinationToSource(employee);
+    return new GenericResponse<>(GenericResponseConstants.SUCCESS, GenericResponseConstants.OPERATION_SUCCESS, response);
   }
 
   @Override
-  public List<EmployeeResponseDto> getAllEmployees() {
-    return employeeRepository.findAll().stream()
+  public GenericResponse<List<EmployeeResponseDto>> getAllEmployees() {
+    List<EmployeeResponseDto> employees = employeeRepository.findAll().stream()
       .map(employeeFieldsMapper::destinationToSource)
       .collect(Collectors.toList());
+
+    return new GenericResponse<>(GenericResponseConstants.SUCCESS, GenericResponseConstants.OPERATION_SUCCESS, employees);
   }
 
   @Override
-  public EmployeeResponseDto updateEmployee(Integer id, EmployeeRequestDto employeeRequestDto) {
+  public GenericResponse<EmployeeResponseDto> updateEmployee(Integer id, EmployeeRequestDto employeeRequestDto) {
     Employee employee = employeeRepository.findById(id)
-      .orElseThrow(() -> new GatherlyExceptions(GatherlyErrorMessage.ERROR_INTERNAL));
+      .orElseThrow(() -> new GatherlyExceptions(GatherlyErrorMessage.EMPLOYEE_NOT_FOUND));
 
     employee.setUsername(employeeRequestDto.getUsername());
     employee.setName(employeeRequestDto.getName());
@@ -75,13 +81,17 @@ public class EmployeeServiceImpl implements EmployeeService {
     employee.setRole(employeeRequestDto.getRole());
 
     Employee updatedEmployee = employeeRepository.save(employee);
-    return employeeFieldsMapper.destinationToSource(updatedEmployee);
+    EmployeeResponseDto response = employeeFieldsMapper.destinationToSource(updatedEmployee);
+
+    return new GenericResponse<>(GenericResponseConstants.SUCCESS, GenericResponseConstants.OPERATION_SUCCESS, response);
   }
 
   @Override
-  public void deleteEmployee(Integer id) {
+  public GenericResponse<Void> deleteEmployee(Integer id) {
     Employee employee = employeeRepository.findById(id)
-      .orElseThrow(() -> new GatherlyExceptions(GatherlyErrorMessage.ERROR_INTERNAL));
+      .orElseThrow(() -> new GatherlyExceptions(GatherlyErrorMessage.EMPLOYEE_NOT_FOUND));
+
     employeeRepository.delete(employee);
+    return new GenericResponse<>(GenericResponseConstants.SUCCESS, GenericResponseConstants.OPERATION_SUCCESS, null);
   }
 }

@@ -2,19 +2,19 @@ package com.codecorecix.gatherly.employee.service;
 
 import com.codecorecix.gatherly.employee.api.dto.request.employee.EmployeeRequestDto;
 import com.codecorecix.gatherly.employee.api.dto.response.employee.EmployeeResponseDto;
+import com.codecorecix.gatherly.management.utils.GenericResponse;
 
 import java.util.List;
 
 public interface EmployeeService {
 
-  EmployeeResponseDto register(EmployeeRequestDto employeeRequestDto);
+  GenericResponse<EmployeeResponseDto> register(EmployeeRequestDto employeeRequestDto);
 
-  // Login de empleado
-  EmployeeResponseDto login(String username, String password);
+  GenericResponse<EmployeeResponseDto> login(String email, String password);
 
-  List<EmployeeResponseDto> getAllEmployees();
+  GenericResponse<List<EmployeeResponseDto>> getAllEmployees();
 
-  EmployeeResponseDto updateEmployee(Integer id, EmployeeRequestDto employeeRequestDto);
+  GenericResponse<EmployeeResponseDto> updateEmployee(Integer id, EmployeeRequestDto employeeRequestDto);
 
-  void deleteEmployee(Integer id);
+  GenericResponse<Void> deleteEmployee(Integer id);
 }

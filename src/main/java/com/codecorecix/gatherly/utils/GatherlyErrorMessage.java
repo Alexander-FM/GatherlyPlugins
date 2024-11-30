@@ -7,10 +7,26 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum GatherlyErrorMessage {
 
-  ERROR_INTERNAL(100, "An error occurred on the server"),
-  ERROR_REGISTER(101, "The client already exists"),
-  ERROR_LOGIN(102, "The email or password is incorrect"),
-  CUSTOMER_NOT_FOUND(103, "The customer does not exist"); // Nuevo mensaje
+
+  // EMPLOYEE
+  EMPLOYEE_ALREADY_EXISTS(101, "The employee already exists"),
+  EMPLOYEE_NOT_FOUND(102, "The employee does not exist"),
+  EMPLOYEE_INVALID_LOGIN(103, "Invalid email or password"),
+
+  // CUSTOMER
+  CUSTOMER_ALREADY_EXISTS(201, "The customer already exists"),
+  CUSTOMER_NOT_FOUND(202, "The customer does not exist"),
+
+  // SUPPLIER
+  SUPPLIER_ALREADY_EXISTS(301, "The supplier already exists"),
+  SUPPLIER_NOT_FOUND(302, "The supplier does not exist"),
+
+  // SERVICES
+  SERVICE_NOT_FOUND(401, "The service does not exist"),
+  SERVICE_ALREADY_EXISTS(402, "The service already exists"),
+
+  // GENERAL
+  ERROR_INTERNAL(500, "An error occurred on the server");
 
   private final Integer errorCode;
 

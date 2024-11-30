@@ -25,7 +25,8 @@ public class Quotation implements Serializable {
   @OneToOne(mappedBy = "quotation", cascade = CascadeType.ALL)
   private Event event;
 
-  @OneToMany(mappedBy = "quotation", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany
+  @JoinColumn(name = "quotation_id")
   private List<Services> includedServices;
 
   @Column(name = "total_cost", nullable = false)

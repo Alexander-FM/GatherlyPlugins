@@ -2,12 +2,14 @@ package com.codecorecix.gatherly.management.serviceImpl;
 
 import com.codecorecix.gatherly.entities.Quotation;
 import com.codecorecix.gatherly.entities.Services;
+import com.codecorecix.gatherly.exceptions.GatherlyExceptions;
 import com.codecorecix.gatherly.management.api.dto.request.management.QuotationRequestDto;
 import com.codecorecix.gatherly.management.api.dto.response.management.QuotationResponseDto;
 import com.codecorecix.gatherly.management.mapper.QuotationMapper;
 import com.codecorecix.gatherly.management.repository.QuotationRepository;
 import com.codecorecix.gatherly.management.repository.ServiceRepository;
 import com.codecorecix.gatherly.management.service.QuotationService;
+import com.codecorecix.gatherly.utils.GatherlyErrorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,26 +26,25 @@ public class QuotationServiceImpl implements QuotationService {
 
   @Override
   public QuotationResponseDto createQuotation(QuotationRequestDto request) {
-    // Recuperar los servicios por sus IDs
-    List<Services> services = serviceRepository.findAllById(request.getServiceIds());
-    if (services.isEmpty()) {
-      throw new RuntimeException("No valid services found for the provided IDs");
-    }
-
-    // Crear la entidad Quotation
+    // Crear la cotización
     Quotation quotation = new Quotation();
     quotation.setIssueDate(request.getIssueDate());
+
+    // Validar y asociar servicios
+    List<Services> services = serviceRepository.findAllById(request.getServiceIds());
+    if (services.isEmpty()) {
+      throw new GatherlyExceptions(GatherlyErrorMessage.ERROR_INTERNAL);
+    }
     quotation.setIncludedServices(services);
 
-    // Calcular el costo total basado en los servicios
+    // Calcular el costo total
     quotation.calculateTotalCost();
 
     // Guardar la cotización
     Quotation savedQuotation = quotationRepository.save(quotation);
-
-    // Convertir a DTO y devolver
     return quotationMapper.toDto(savedQuotation);
   }
+
 
 
 

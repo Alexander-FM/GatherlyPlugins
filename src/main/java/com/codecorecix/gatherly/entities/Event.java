@@ -40,5 +40,9 @@ public class Event implements Serializable {
 
   @OneToOne(mappedBy = "event", cascade = CascadeType.ALL)
   private Schedule schedule;
+
+  @ManyToOne
+  @JoinColumn(name = "supplier_id", nullable = false)
+  private Supplier supplier;
 }
 
