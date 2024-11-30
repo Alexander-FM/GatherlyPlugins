@@ -6,8 +6,13 @@ import com.codecorecix.gatherly.management.api.dto.response.management.EventResp
 import java.util.List;
 
 public interface EventService {
-  EventResponseDto createEvent(EventRequestDto request);
   List<EventResponseDto> getAllEvents();
   EventResponseDto getEventById(Integer id);
+
+  EventResponseDto createEvent(EventRequestDto request);
+
+  EventResponseDto updateEvent(Integer id, EventRequestDto request);
+
+  void deleteEvent(Integer id);
 }
 

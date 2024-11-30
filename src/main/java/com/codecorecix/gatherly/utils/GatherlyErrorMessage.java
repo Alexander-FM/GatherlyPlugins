@@ -25,6 +25,15 @@ public enum GatherlyErrorMessage {
   SERVICE_NOT_FOUND(401, "The service does not exist"),
   SERVICE_ALREADY_EXISTS(402, "The service already exists"),
 
+  // QUOTATION
+  QUOTATION_NOT_FOUND(501, "The quotation does not exist"),
+  QUOTATION_ALREADY_EXISTS(502, "The quotation already exists"),
+
+  // EVENT
+  EVENT_NOT_FOUND(601, "The event does not exist"),
+  EVENT_ALREADY_EXISTS(602, "The event already exists"),
+
+
   // GENERAL
   ERROR_INTERNAL(500, "An error occurred on the server");
 

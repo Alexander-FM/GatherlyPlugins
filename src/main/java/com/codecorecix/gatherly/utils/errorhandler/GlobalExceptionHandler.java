@@ -61,9 +61,9 @@ public class GlobalExceptionHandler {
 
   private HttpStatus mapToHttpStatus(GatherlyErrorMessage errorMessage) {
     return switch (errorMessage) {
-      case EMPLOYEE_ALREADY_EXISTS, CUSTOMER_ALREADY_EXISTS, SUPPLIER_ALREADY_EXISTS ->
+      case EMPLOYEE_ALREADY_EXISTS, CUSTOMER_ALREADY_EXISTS, SUPPLIER_ALREADY_EXISTS, QUOTATION_ALREADY_EXISTS, EVENT_ALREADY_EXISTS ->
         HttpStatus.CONFLICT;
-      case EMPLOYEE_NOT_FOUND, CUSTOMER_NOT_FOUND, SUPPLIER_NOT_FOUND, SERVICE_NOT_FOUND ->
+      case EMPLOYEE_NOT_FOUND, CUSTOMER_NOT_FOUND, SUPPLIER_NOT_FOUND, SERVICE_NOT_FOUND, QUOTATION_NOT_FOUND, EVENT_NOT_FOUND ->
         HttpStatus.NOT_FOUND;
       case EMPLOYEE_INVALID_LOGIN ->
         HttpStatus.UNAUTHORIZED;
@@ -71,4 +71,5 @@ public class GlobalExceptionHandler {
         HttpStatus.INTERNAL_SERVER_ERROR;
     };
   }
+
 }

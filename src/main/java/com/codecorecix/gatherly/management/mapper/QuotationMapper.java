@@ -11,11 +11,11 @@ public interface QuotationMapper {
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "event", ignore = true)
-  @Mapping(target = "includedServices", ignore = true)
   @Mapping(target = "totalCost", ignore = true)
   Quotation toEntity(QuotationRequestDto dto);
 
-  @Mapping(target = "serviceIds", ignore = true)
+  @Mapping(target = "eventId", source = "event.id")
   QuotationResponseDto toDto(Quotation entity);
 }
+
 

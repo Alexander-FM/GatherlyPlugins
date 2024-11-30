@@ -11,5 +11,5 @@ public class QuotationResponseDto {
   private Integer id;
   private LocalDate issueDate;
   private Double totalCost;
-  private List<Integer> serviceIds;
+  private Integer eventId;
 }

@@ -9,5 +9,9 @@ import java.util.List;
 public class QuotationRequestDto {
 
   private LocalDate issueDate;
-  private List<Integer> serviceIds;
+  private List<Integer> serviceIds; // Opcional: IDs de servicios asociados
+  private Double totalCost; // Agregar este campo para permitir actualizarlo
+  private Integer eventId; // Asociar un evento a la cotización
+
 }
+

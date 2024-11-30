@@ -1,5 +1,6 @@
 package com.codecorecix.gatherly.management.serviceImpl;
 
+import com.codecorecix.gatherly.entities.Event;
 import com.codecorecix.gatherly.entities.Quotation;
 import com.codecorecix.gatherly.entities.Services;
 import com.codecorecix.gatherly.exceptions.GatherlyExceptions;
@@ -35,10 +36,8 @@ public class QuotationServiceImpl implements QuotationService {
     if (services.isEmpty()) {
       throw new GatherlyExceptions(GatherlyErrorMessage.ERROR_INTERNAL);
     }
-    quotation.setIncludedServices(services);
 
-    // Calcular el costo total
-    quotation.calculateTotalCost();
+
 
     // Guardar la cotización
     Quotation savedQuotation = quotationRepository.save(quotation);
@@ -46,6 +45,37 @@ public class QuotationServiceImpl implements QuotationService {
   }
 
 
+  @Override
+  public List<QuotationResponseDto> getAllQuotations() {
+    return quotationRepository.findAll().stream()
+      .map(quotation -> {
+        QuotationResponseDto dto = quotationMapper.toDto(quotation);
+        // Asociar eventId si el evento está relacionado
+        if (quotation.getEvent() != null) {
+          dto.setEventId(quotation.getEvent().getId());
+        }
+        return dto;
+      })
+      .collect(Collectors.toList());
+  }
 
 
+  @Override
+  public QuotationResponseDto getQuotationById(Integer id) {
+    Quotation quotation = quotationRepository.findById(id)
+      .orElseThrow(() -> new GatherlyExceptions(GatherlyErrorMessage.QUOTATION_NOT_FOUND));
+
+    QuotationResponseDto dto = quotationMapper.toDto(quotation);
+    if (quotation.getEvent() != null) {
+      dto.setEventId(quotation.getEvent().getId());
+    }
+    return dto;
+  }
+
+  @Override
+  public void deleteQuotation(Integer id) {
+    Quotation quotation = quotationRepository.findById(id)
+      .orElseThrow(() -> new GatherlyExceptions(GatherlyErrorMessage.QUOTATION_NOT_FOUND));
+    quotationRepository.delete(quotation);
+  }
 }
