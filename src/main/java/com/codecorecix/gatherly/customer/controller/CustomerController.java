@@ -20,7 +20,7 @@ public class CustomerController {
 
   private final CustomerService customerService;
 
-  @PostMapping("/register")
+  @PostMapping
   public GenericResponse<CustomerResponseDto> registerCustomer(@RequestBody CustomerRequestDto customerRequestDto) {
     return customerService.registerCustomer(customerRequestDto);
   }

@@ -37,10 +37,10 @@ public class SecurityConfig {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
       registry.addMapping("/**") // Permitir CORS en todas las rutas
-        .allowedOrigins("http://localhost:8080") // Permitir el origen específico
-        .allowedMethods("GET", "POST", "PUT", "DELETE") // Métodos permitidos
-        .allowedHeaders("*"); // Permitir todos los encabezados
-
+        .allowedOrigins("http://localhost:8080", "http://localhost:8081") // Permitir los orígenes específicos
+        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH") // Métodos permitidos
+        .allowedHeaders("*") // Permitir todos los encabezados
+        .allowCredentials(true); // Permitir envío de credenciales como cookies o encabezados de autenticación
     }
   }
 }
