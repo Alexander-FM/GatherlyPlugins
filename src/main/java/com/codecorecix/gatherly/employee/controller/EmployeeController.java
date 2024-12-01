@@ -19,7 +19,7 @@ import java.util.List;
 public class EmployeeController {
   private final EmployeeService employeeService;
 
-  @PostMapping("/register")
+  @PostMapping
   public ResponseEntity<GenericResponse<EmployeeResponseDto>> register(@RequestBody EmployeeRequestDto employeeRequestDto) {
     GenericResponse<EmployeeResponseDto> response = employeeService.register(employeeRequestDto);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);

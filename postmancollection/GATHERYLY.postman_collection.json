@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"username\": \"prueba\",\r\n  \"name\": \"John\",\r\n  \"lastname\": \"Doe\",\r\n  \"email\": \"john.doe@example.com\",\r\n  \"password\": \"123456\",\r\n  \"phone\": \"123456789\",\r\n  \"role\": \"Admin\",\r\n  \"dateCessation\": null\r\n}\r\n",
+							"raw": "{\r\n  \"username\": \"prueba\",\r\n  \"name\": \"John\",\r\n  \"lastname\": \"Doe\",\r\n  \"email\": \"admin@gmail.com\",\r\n  \"password\": \"123\",\r\n  \"phone\": \"123456789\",\r\n  \"role\": \"Admin\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -46,7 +46,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"john.doe@example.com\",\r\n    \"password\": \"123456\"\r\n}",
+							"raw": "{\r\n    \"email\": \"admin@gmail.com\",\r\n    \"password\": \"123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -152,7 +152,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"Juan\",\r\n  \"lastname\": \"Pérez\",\r\n  \"phone\": \"987654321\",\r\n  \"email\": \"juan.perez@example.com\",\r\n  \"address\": \"Av. Principal 123, Lima\"\r\n}\r\n",
+							"raw": "{\r\n  \"name\": \"Jorge\",\r\n  \"lastname\": \"Pérez\",\r\n  \"phone\": \"987654322\",\r\n  \"email\": \"jorge.perez@example.com\",\r\n  \"address\": \"Av. Principal 123, Lima\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -160,7 +160,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:9090/api/customer/register",
+							"raw": "http://localhost:9090/api/customer",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -168,8 +168,7 @@
 							"port": "9090",
 							"path": [
 								"api",
-								"customer",
-								"register"
+								"customer"
 							]
 						}
 					},
