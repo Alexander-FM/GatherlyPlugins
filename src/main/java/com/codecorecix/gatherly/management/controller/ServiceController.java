@@ -27,6 +27,11 @@ public class ServiceController {
     return ResponseEntity.ok(serviceService.getAllServices());
   }
 
+  @GetMapping("/by-supplier/{supplierId}")
+  public ResponseEntity<GenericResponse<List<ServiceResponseDto>>> getServicesBySupplier(@PathVariable Integer supplierId) {
+    return ResponseEntity.ok(serviceService.getServicesBySupplier(supplierId));
+  }
+
   @PutMapping("/{id}")
   public ResponseEntity<GenericResponse<ServiceResponseDto>> updateService(
     @PathVariable Integer id, @RequestBody ServiceRequestDto request) {

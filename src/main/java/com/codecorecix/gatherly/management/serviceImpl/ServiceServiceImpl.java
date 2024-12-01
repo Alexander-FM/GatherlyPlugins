@@ -48,6 +48,20 @@ public class ServiceServiceImpl implements ServiceService {
     return new GenericResponse<>(GenericResponseConstants.SUCCESS, GenericResponseConstants.OPERATION_SUCCESS, response);
   }
 
+  @Override
+  public GenericResponse<List<ServiceResponseDto>> getServicesBySupplier(Integer supplierId) {
+    // Validar que el proveedor exista
+    Supplier supplier = supplierRepository.findById(supplierId)
+      .orElseThrow(() -> new GatherlyExceptions(GatherlyErrorMessage.SUPPLIER_NOT_FOUND));
+
+    // Obtener los servicios asociados al proveedor
+    List<ServiceResponseDto> services = serviceRepository.findBySupplierId(supplierId).stream()
+      .map(serviceMapper::toDto)
+      .collect(Collectors.toList());
+
+    return new GenericResponse<>(GenericResponseConstants.SUCCESS, GenericResponseConstants.OPERATION_SUCCESS, services);
+  }
+
 
   @Override
   public GenericResponse<List<ServiceResponseDto>> getAllServices() {

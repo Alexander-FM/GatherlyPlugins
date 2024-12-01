@@ -11,6 +11,8 @@ public interface ServiceService {
 
   GenericResponse<ServiceResponseDto> createService(ServiceRequestDto request);
 
+  GenericResponse<List<ServiceResponseDto>> getServicesBySupplier(Integer supplierId);
+
   GenericResponse<List<ServiceResponseDto>> getAllServices();
 
   GenericResponse<ServiceResponseDto> updateService(Integer id, ServiceRequestDto request);
