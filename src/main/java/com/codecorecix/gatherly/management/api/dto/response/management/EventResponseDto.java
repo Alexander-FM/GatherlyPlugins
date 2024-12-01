@@ -23,5 +23,7 @@ public class EventResponseDto {
   public static class ServiceDetail {
     private String serviceName;
     private Double cost;
+    private Integer quantity; // Agregamos el campo quantity
+
   }
 }

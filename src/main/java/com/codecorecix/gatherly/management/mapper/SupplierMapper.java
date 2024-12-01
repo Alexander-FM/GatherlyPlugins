@@ -12,7 +12,9 @@ public interface SupplierMapper {
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "services", ignore = true)
   @Mapping(target = "events", ignore = true)
+  @Mapping(target = "reservationsPerDay", ignore = true) // Ignorar si no necesitas esta propiedad en el DTO
   Supplier toEntity(SupplierRequestDto requestDto);
 
+  @Mapping(target = "servicePrice", source = "servicePrice") // Mapear correctamente servicePrice
   SupplierResponseDto toDto(Supplier supplier);
 }

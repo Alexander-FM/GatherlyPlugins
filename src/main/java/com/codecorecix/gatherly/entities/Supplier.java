@@ -7,7 +7,10 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -41,5 +44,24 @@ public class Supplier implements Serializable {
 
   @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Event> events;
+
+  @ElementCollection
+  @CollectionTable(name = "supplier_reservations", joinColumns = @JoinColumn(name = "supplier_id"))
+  @MapKeyColumn(name = "reservation_date")
+  @Column(name = "reservations_count")
+  private Map<LocalDate, Integer> reservationsPerDay = new HashMap<>();
+
+  public void addReservation(LocalDate date) {
+    int count = reservationsPerDay.getOrDefault(date, 0);
+    if (count >= 3) {
+      throw new IllegalArgumentException("Maximum reservations for the day reached.");
+    }
+    reservationsPerDay.put(date, count + 1);
+    updateAvailability();
+  }
+
+  public void updateAvailability() {
+    this.availability = reservationsPerDay.values().stream().noneMatch(count -> count >= 3);
+  }
 }
 

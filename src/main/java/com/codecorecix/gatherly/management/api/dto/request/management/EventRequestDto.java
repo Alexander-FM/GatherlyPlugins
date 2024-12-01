@@ -13,5 +13,11 @@ public class EventRequestDto {
   private LocalDate eventDate;
   private String location;
   private Double basePrice;
-  private List<Integer> serviceIds; // IDs de los servicios seleccionados
+  private List<ServiceRequest> services;
+
+  @Data
+  public static class ServiceRequest {
+    private Integer serviceId;
+    private Integer quantity;
+  }
 }

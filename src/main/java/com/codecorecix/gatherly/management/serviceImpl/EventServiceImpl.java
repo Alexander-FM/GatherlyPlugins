@@ -6,10 +6,7 @@ import com.codecorecix.gatherly.exceptions.GatherlyExceptions;
 import com.codecorecix.gatherly.management.api.dto.request.management.EventRequestDto;
 import com.codecorecix.gatherly.management.api.dto.response.management.EventResponseDto;
 import com.codecorecix.gatherly.management.mapper.EventMapper;
-import com.codecorecix.gatherly.management.repository.EventRepository;
-import com.codecorecix.gatherly.management.repository.QuotationRepository;
-import com.codecorecix.gatherly.management.repository.ServiceRepository;
-import com.codecorecix.gatherly.management.repository.SupplierRepository;
+import com.codecorecix.gatherly.management.repository.*;
 import com.codecorecix.gatherly.management.service.EventService;
 import com.codecorecix.gatherly.utils.GatherlyErrorMessage;
 import lombok.RequiredArgsConstructor;
@@ -29,135 +26,158 @@ public class EventServiceImpl implements EventService {
   private final QuotationRepository quotationRepository;
   private final ServiceRepository serviceRepository;
   private final SupplierRepository supplierRepository;
+  private final DetalleServiceRepository detalleServiceRepository;
 
   @Override
   public List<EventResponseDto> getAllEvents() {
-    // Obtener todos los eventos desde la base de datos
     List<Event> events = eventRepository.findAll();
-
-    // Mapear cada evento a su correspondiente DTO
     return events.stream()
       .map(event -> {
         EventResponseDto response = eventMapper.toDto(event);
-
-        // Calcular el costo total (basePrice + servicios)
-        double totalCost = event.getBasePrice();
-        if (event.getIncludedServices() != null) {
-          totalCost += event.getIncludedServices()
-            .stream()
-            .mapToDouble(Services::getCost)
-            .sum();
-        }
+        double totalCost = calculateTotalCost(event);
         response.setTotalCost(totalCost);
-
         return response;
       })
       .collect(Collectors.toList());
   }
 
-
   @Override
   public EventResponseDto getEventById(Integer id) {
-    Event event = eventRepository.findById(id)
+    Event event = eventRepository.findByIdWithDetalleServices(id)
       .orElseThrow(() -> new GatherlyExceptions(GatherlyErrorMessage.EVENT_NOT_FOUND));
 
     EventResponseDto response = eventMapper.toDto(event);
-
-    double totalCost = event.getBasePrice();
-    if (event.getIncludedServices() != null) {
-      totalCost += event.getIncludedServices()
-        .stream()
-        .mapToDouble(Services::getCost)
-        .sum();
-    }
-    response.setTotalCost(totalCost);
-
+    response.setTotalCost(calculateTotalCost(event));
     return response;
   }
 
-
   @Override
   public EventResponseDto createEvent(EventRequestDto request) {
-    // Crear un evento
+    // Validar cliente
+    Customer customer = customerRepository.findById(request.getCustomerId())
+      .orElseThrow(() -> new GatherlyExceptions(GatherlyErrorMessage.CUSTOMER_NOT_FOUND));
+
+    // Validar proveedor
+    Supplier supplier = supplierRepository.findById(request.getSupplierId())
+      .orElseThrow(() -> new GatherlyExceptions(GatherlyErrorMessage.SUPPLIER_NOT_FOUND));
+
+    // Verificar disponibilidad del proveedor
+    if (supplier.getReservationsPerDay().getOrDefault(request.getEventDate(), 0) >= 3) {
+      throw new GatherlyExceptions(GatherlyErrorMessage.SUPPLIER_NOT_AVAILABLE);
+    }
+
+    // Crear evento
     Event event = new Event();
+    event.setCustomer(customer);
+    event.setSupplier(supplier);
     event.setEventType(request.getEventType());
     event.setEventDate(request.getEventDate());
     event.setLocation(request.getLocation());
     event.setBasePrice(request.getBasePrice());
 
-    // Validar el cliente
-    Customer customer = customerRepository.findById(request.getCustomerId())
-      .orElseThrow(() -> new RuntimeException("Customer not found"));
-    event.setCustomer(customer);
-
-    // Validar el proveedor
-    Supplier supplier = supplierRepository.findById(request.getSupplierId())
-      .orElseThrow(() -> new RuntimeException("Supplier not found"));
-    event.setSupplier(supplier);
-
-    // Asociar servicios seleccionados (si los hay)
-    List<Services> services = null;
-    if (request.getServiceIds() != null && !request.getServiceIds().isEmpty()) {
-      services = serviceRepository.findAllById(request.getServiceIds());
-      event.setIncludedServices(services);
-    }
-
-    // Calcular el precio base y sumar servicios
-    double totalCost = event.getBasePrice();
-    if (services != null) {
-      totalCost += services.stream().mapToDouble(Services::getCost).sum();
-    }
-
-    // Crear y asociar la cotización
+    // Crear cotización inicial
     Quotation quotation = new Quotation();
     quotation.setIssueDate(LocalDate.now());
-    quotation.setTotalCost(totalCost);
+    quotation.setTotalCost(request.getBasePrice());
     event.setQuotation(quotation);
 
-    // Guardar evento y cotización
+    // Guardar evento inicialmente
     Event savedEvent = eventRepository.save(event);
 
+    // Manejar servicios seleccionados
+    if (request.getServices() != null && !request.getServices().isEmpty()) {
+      for (EventRequestDto.ServiceRequest serviceRequest : request.getServices()) {
+        Services service = serviceRepository.findById(serviceRequest.getServiceId())
+          .orElseThrow(() -> new GatherlyExceptions(GatherlyErrorMessage.SERVICE_NOT_FOUND));
+
+        // Validar disponibilidad del servicio
+        if (!service.getAvailability() || service.getQuantity() < serviceRequest.getQuantity()) {
+          throw new GatherlyExceptions(GatherlyErrorMessage.SERVICE_NOT_AVAILABLE);
+        }
+
+        // Crear detalle del servicio
+        DetalleService detalleService = new DetalleService();
+        detalleService.setEvent(savedEvent);
+        detalleService.setService(service);
+        detalleService.setUsedQuantity(serviceRequest.getQuantity());
+
+        // Reducir cantidad disponible del servicio
+        service.reduceQuantity(serviceRequest.getQuantity());
+
+        // Guardar detalle del servicio
+        detalleServiceRepository.save(detalleService);
+
+        // Actualizar el costo total de la cotización
+        quotation.setTotalCost(quotation.getTotalCost() + (service.getCost() * serviceRequest.getQuantity()));
+      }
+    }
+
+    // Registrar la reserva del proveedor
+    supplier.addReservation(request.getEventDate());
+
+    // Actualizar cotización y guardar evento final
+    savedEvent.setQuotation(quotation);
+    Event finalEvent = eventRepository.findByIdWithDetalleServices(savedEvent.getId())
+      .orElseThrow(() -> new GatherlyExceptions(GatherlyErrorMessage.EVENT_NOT_FOUND));
+
     // Mapear respuesta
-    EventResponseDto response = eventMapper.toDto(savedEvent);
-    response.setTotalCost(totalCost);
+    EventResponseDto response = eventMapper.toDto(finalEvent);
+    response.setTotalCost(calculateTotalCost(finalEvent));
     return response;
   }
+
+
 
   @Override
   public EventResponseDto updateEvent(Integer id, EventRequestDto request) {
     Event existingEvent = eventRepository.findById(id)
       .orElseThrow(() -> new GatherlyExceptions(GatherlyErrorMessage.EVENT_NOT_FOUND));
 
+    // Actualizar detalles del evento
     existingEvent.setEventType(request.getEventType());
     existingEvent.setEventDate(request.getEventDate());
     existingEvent.setLocation(request.getLocation());
     existingEvent.setBasePrice(request.getBasePrice());
 
+    // Validar cliente
     Customer customer = customerRepository.findById(request.getCustomerId())
       .orElseThrow(() -> new GatherlyExceptions(GatherlyErrorMessage.CUSTOMER_NOT_FOUND));
     existingEvent.setCustomer(customer);
 
+    // Validar proveedor
     Supplier supplier = supplierRepository.findById(request.getSupplierId())
       .orElseThrow(() -> new GatherlyExceptions(GatherlyErrorMessage.SUPPLIER_NOT_FOUND));
     existingEvent.setSupplier(supplier);
-
+/*
+    // Actualizar servicios relacionados (si se envían)
     if (request.getServiceIds() != null && !request.getServiceIds().isEmpty()) {
+      List<DetalleService> currentDetails = detalleServiceRepository.findByEvent(existingEvent);
+      detalleServiceRepository.deleteAll(currentDetails);
+
       List<Services> services = serviceRepository.findAllById(request.getServiceIds());
-      existingEvent.setIncludedServices(services);
+      for (Services service : services) {
+        if (!service.getAvailability() || service.getQuantity() <= 0) {
+          throw new GatherlyExceptions(GatherlyErrorMessage.SERVICE_NOT_AVAILABLE);
+        }
+
+        DetalleService detalleService = new DetalleService();
+        detalleService.setEvent(existingEvent);
+        detalleService.setService(service);
+        detalleService.setUsedQuantity(1);
+        service.reduceQuantity(1);
+        detalleServiceRepository.save(detalleService);
+      }
     }
 
-    double totalCost = existingEvent.getBasePrice();
-    if (existingEvent.getIncludedServices() != null) {
-      totalCost += existingEvent.getIncludedServices()
-        .stream()
-        .mapToDouble(Services::getCost)
-        .sum();
-    }
+ */
 
+    // Actualizar cotización
     Quotation quotation = existingEvent.getQuotation();
+    double totalCost = calculateTotalCost(existingEvent);
     quotation.setTotalCost(totalCost);
     existingEvent.setQuotation(quotation);
 
+    // Guardar cambios
     Event updatedEvent = eventRepository.save(existingEvent);
     EventResponseDto response = eventMapper.toDto(updatedEvent);
     response.setTotalCost(totalCost);
@@ -171,6 +191,14 @@ public class EventServiceImpl implements EventService {
     eventRepository.delete(event);
   }
 
-
+  private double calculateTotalCost(Event event) {
+    double totalCost = event.getBasePrice();
+    List<DetalleService> detalles = detalleServiceRepository.findByEvent(event);
+    if (detalles != null) {
+      totalCost += detalles.stream()
+        .mapToDouble(ds -> ds.getService().getCost() * ds.getUsedQuantity())
+        .sum();
+    }
+    return totalCost;
+  }
 }
-

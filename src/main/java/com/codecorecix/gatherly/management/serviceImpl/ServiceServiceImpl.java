@@ -36,8 +36,9 @@ public class ServiceServiceImpl implements ServiceService {
     Services service = new Services();
     service.setServiceName(request.getServiceName());
     service.setCost(request.getCost());
+    service.setQuantity(request.getQuantity());
     service.setDescription(request.getDescription());
-    service.setAvailability(request.getAvailability());
+    service.setAvailability(request.getQuantity() > 0);
     service.setSupplier(supplier);
 
     // Guardar el servicio
@@ -46,6 +47,7 @@ public class ServiceServiceImpl implements ServiceService {
 
     return new GenericResponse<>(GenericResponseConstants.SUCCESS, GenericResponseConstants.OPERATION_SUCCESS, response);
   }
+
 
   @Override
   public GenericResponse<List<ServiceResponseDto>> getAllServices() {

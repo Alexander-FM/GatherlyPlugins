@@ -20,10 +20,12 @@ public enum GatherlyErrorMessage {
   // SUPPLIER
   SUPPLIER_ALREADY_EXISTS(301, "The supplier already exists"),
   SUPPLIER_NOT_FOUND(302, "The supplier does not exist"),
+  SUPPLIER_NOT_AVAILABLE(303, "The supplier is not available for the selected date"),
 
   // SERVICES
   SERVICE_NOT_FOUND(401, "The service does not exist"),
   SERVICE_ALREADY_EXISTS(402, "The service already exists"),
+  SERVICE_NOT_AVAILABLE(403, "The selected service is not available or out of stock"),
 
   // QUOTATION
   QUOTATION_NOT_FOUND(501, "The quotation does not exist"),
@@ -32,6 +34,7 @@ public enum GatherlyErrorMessage {
   // EVENT
   EVENT_NOT_FOUND(601, "The event does not exist"),
   EVENT_ALREADY_EXISTS(602, "The event already exists"),
+  SERVICE_OUT_OF_STOCK(603, "One or more selected services are out of stock"),
 
 
   // GENERAL

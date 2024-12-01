@@ -32,7 +32,18 @@ public class Services implements Serializable {
   @Column(name = "availability", nullable = false)
   private Boolean availability;
 
+  @Column(name = "quantity", nullable = false)
+  private Integer quantity;
+
   @ManyToOne
   @JoinColumn(name = "supplier_id", nullable = false)
   private Supplier supplier;
+
+  public void reduceQuantity(int usedQuantity) {
+    if (usedQuantity > this.quantity) {
+      throw new IllegalArgumentException("Insufficient quantity available.");
+    }
+    this.quantity -= usedQuantity;
+    this.availability = this.quantity > 0;
+  }
 }

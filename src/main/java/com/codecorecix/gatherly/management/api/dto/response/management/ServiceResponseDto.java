@@ -10,5 +10,6 @@ public class ServiceResponseDto {
   private String description;
   private Boolean availability;
   private Double cost;
+  private Integer quantity;
   private SupplierResponseDto supplier; // Incluir datos completos del proveedor
 }

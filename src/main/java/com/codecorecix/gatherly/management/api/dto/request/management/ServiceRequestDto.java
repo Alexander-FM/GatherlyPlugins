@@ -14,6 +14,9 @@ public class ServiceRequestDto {
   @NotBlank(message = "Description cannot be blank")
   private String description;
 
+  @NotBlank(message = "Quantity cannot be blank")
+  private Integer quantity;
+
   @NotNull(message = "Availability must be specified")
   private Boolean availability;
 

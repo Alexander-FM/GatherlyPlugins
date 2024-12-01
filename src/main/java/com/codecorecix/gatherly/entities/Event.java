@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -49,14 +50,14 @@ public class Event implements Serializable {
   @JoinColumn(name = "supplier_id", nullable = false)
   private Supplier supplier;
 
-  @OneToMany
-  @JoinColumn(name = "event_id") // Relación directa entre evento y servicios
-  private List<Services> includedServices;
+  @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+  private List<DetalleService> detalleServices = new ArrayList<>();
 
-  public void calculateBasePrice() {
-    // Calcular el precio base del evento basado en los servicios seleccionados
-    this.basePrice = includedServices.stream()
-      .mapToDouble(Services::getCost)
-      .sum() * 0.10; // Ejemplo: 10% del costo de los servicios incluidos
+
+  public void reserveServices() {
+    if (detalleServices != null && !detalleServices.isEmpty()) {
+      detalleServices.forEach(detalle -> detalle.getService().reduceQuantity(detalle.getUsedQuantity()));
+    }
+    supplier.addReservation(eventDate);
   }
 }
